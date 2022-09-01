@@ -1,10 +1,10 @@
 /*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
+Copyright belongs to all species of all the universes
 */
 package cmd
 
 import (
+	"fmt"
 	"github.com/mirantis/powerplug/cmd/container"
 	"github.com/mirantis/powerplug/cmd/logs"
 	"github.com/mirantis/powerplug/cmd/node"
@@ -14,17 +14,23 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "powerplug",
+	Use:   "broker",
 	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Run: func(cmd *cobra.Command, args []string) {
+		help := `
+Usage:  broker [OPTIONS] COMMAND
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+A parser/analyzer to analyze support bundle's dsinfo.json file and show meaningful output
+  
+  node	      Shows node specific information
+  contianer   Shows container specific information 
+  logs        Shows logs of a container or a specific object of a node
+  info        Shows components related information of the nodes and container  
+  stats	      Shows statistics/metrics/performance related information
+
+`
+		fmt.Println(help)
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -37,16 +43,11 @@ func Execute() {
 }
 
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.powerplug.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	rootCmd.AddCommand(container.ContainerCmd)
+	rootCmd.AddCommand(container.ContListCmd)
+	rootCmd.AddCommand(container.ContInspectCmd)
 	rootCmd.AddCommand(node.NodeCmd)
 	rootCmd.AddCommand(logs.LogsCmd)
+	rootCmd.AddCommand(container.ContListCmd)
 }

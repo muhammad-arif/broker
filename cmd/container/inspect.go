@@ -1,40 +1,72 @@
 /*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
+Copyright belongs to all species of all the universes
 */
 package container
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/mirantis/powerplug/misc"
+	dLib "github.com/muhammad-arif/dsinfoParsingLibrary"
 
 	"github.com/spf13/cobra"
 )
 
-// inspectCmd represents the inspect command
-var contInspectCmd = &cobra.Command{
-	Use:   "powerplug container inspect [NODE NAME] [CONTAINER NAME]",
-	Short: "Display detailed information on one or more containers",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+var pretty bool
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+// contInspectCmd represents the inspect command
+var ContInspectCmd = &cobra.Command{
+	Use:   "container inspect [NODE NAME] [CONTAINER NAME]",
+	Short: "Display detailed information on one or more containers",
+	Args:  cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("inspect called")
+		getContainerInspect(args)
 	},
+	Aliases: []string{"inspect", "ins", "describe", "i"},
 }
 
 func init() {
-	//ContainerCmd.AddCommand(inspectCmd)
+	ContInspectCmd.Flags().BoolVarP(&pretty, "pretty", "p", false, "pretty JSON output")
+}
 
-	// Here you will define your flags and configuration settings.
+func getContainerInspect(a []string) {
+	node := a[0]
+	cont := a[1]
+	// Invoking ParseUcpNodesInspect to collect the node names and core file
+	nodeList, _, dsinfoJson := misc.ParseUcpNodesInspect()
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// inspectCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// inspectCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// checking if the mention node is present in the list
+	if _, ok := nodeList[node]; ok {
+		//If the node is valid
+		// dumping core dsinfo structure to nestedDsinfo as a map so that the node can be parsed
+		var nestedDsinfo = make(map[string]json.RawMessage)
+		err := json.Unmarshal(*dsinfoJson, &nestedDsinfo)
+		if err != nil {
+			fmt.Errorf("cannot unmarshal %s", err)
+		}
+		var nodeDsinfoStruct dLib.DsinfoSlashDsinfoDotJson
+		err = json.Unmarshal(nestedDsinfo[node], &nodeDsinfoStruct)
+		if err != nil {
+			fmt.Errorf("Cannot unmarshal nesteddsinfo")
+		}
+		var NodeContents nestedDsinfoT
+		err = json.Unmarshal(nodeDsinfoStruct.DsinfoContents, &NodeContents)
+		if err != nil {
+			fmt.Errorf("%v", err)
+		}
+		if d, isFound := NodeContents.ContainerInfo[cont]; isFound {
+			x, err := json.Marshal(d.Inspect)
+			if err != nil {
+				fmt.Errorf("not unmarshalled properly, %v", err)
+			}
+			if pretty {
+				z, _ := misc.PrettyString(string(x))
+				fmt.Println(z)
+			} else {
+				fmt.Println(string(x))
+			}
+		} else {
+			fmt.Errorf("container not found. Try with `broker ps -v`")
+		}
+	}
 }

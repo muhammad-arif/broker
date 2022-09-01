@@ -1,6 +1,5 @@
 /*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
+Copyright belongs to all species of all the universes
 */
 package node
 
@@ -17,20 +16,10 @@ var NodeCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("node called")
 	},
-	Aliases: []string{"nodes", "n", "no"},
+	Aliases: []string{"nodes", "n", "no", "node"},
 }
 
 func init() {
 	NodeCmd.AddCommand(nodeListCmd)
 	NodeCmd.AddCommand(nodeInspectCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// nodeCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// nodeCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
