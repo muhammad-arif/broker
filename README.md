@@ -4,12 +4,18 @@
 This repository is the home of the cli used to parse the `dsinfo.json` file from the support bundle generated from Mirantis Kubernetes Engine.
 
 This is tool has been inspired from `docker-cli` and re-used a majority of types from moby,docker-cli repositories.
+
 # Reference
+Pre-requisites:
+- Set `broker` binary to your bin directory and provide appropriate permission.
+- Then change your current directory to the root directory of a support bunlde where the `dsinfo.json` file is present.
+- Then execute the broker commands.
+
 ## broker
 To list available commands, either run `broker` with no parameters
 or execute `broker help`:
 ```console=
-A cli tool/parser/analyzer to analyze support bundle's dsinfo.json file and show meaningful output
+A cli tool parser/analyzer to analyze support bundle's dsinfo.json file and show meaningful output
 
 Usage:  broker [OPTIONS] COMMAND
 
@@ -73,7 +79,7 @@ broker
 The command `node` provides 2 subcommands `ls` and `inspect`
 #### node ls
 This command will return list of all the nodes of the cluster,
-```
+```console
 ╰──➤ broker node ls
 +------------------+---------+--------+-------+---------------+---------+---------+-------+-------+
 |       NAME       |   ROLE  |  AVAIL | STATE |       IP      |    OS   |  ENGINE |  MKE  |  ORCA |
@@ -91,7 +97,7 @@ This command will return list of all the nodes of the cluster,
 +------------------+---------+--------+-------+---------------+---------+---------+-------+-------+
 ```
 For help use help flag,
-```
+```console
 ╰──➤ broker node ls --help
 List swarm nodes
 
