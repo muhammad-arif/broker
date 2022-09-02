@@ -23,11 +23,10 @@ Usage:  broker [OPTIONS] COMMAND
 A parser/analyzer to analyze support bundle's dsinfo.json file and show meaningful output
   
   node	      Shows node specific information
-  contianer   Shows container specific information 
+  container   Shows container specific information 
   logs        Shows logs of a container or a specific object of a node
   info        Shows components related information of the nodes and container  
   stats	      Shows statistics/metrics/performance related information
-
 `
 		fmt.Println(help)
 	},

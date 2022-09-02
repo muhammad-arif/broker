@@ -11,7 +11,7 @@ import (
 
 // NodeCmd represents the node command
 var NodeCmd = &cobra.Command{
-	Use:   "powerplug node [COMMAND]",
+	Use:   "node [COMMAND]",
 	Short: "Collect Swarm Node information",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("node called")
