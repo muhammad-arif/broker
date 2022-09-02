@@ -8,7 +8,7 @@ This is tool has been inspired from `docker-cli` and re-used a majority of types
 # Reference
 Pre-requisites:
 - Set `broker` binary to your bin directory and provide appropriate permission.
-- Then change your current directory to the root directory of a support bunlde where the `dsinfo.json` file is present.
+- Then change your current directory to the root directory of a support bundle where the `dsinfo.json` file is present.
 - Then execute the broker commands.
 
 ## broker
