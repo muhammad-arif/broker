@@ -10,7 +10,7 @@ import (
 
 // containerCmd represents the container command
 var ContainerCmd = &cobra.Command{
-	Use:   "powerplug container COMMAND",
+	Use:   "container COMMAND",
 	Short: "Check containers information",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("container called")

@@ -6,7 +6,7 @@ package node
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/mirantis/powerplug/misc"
+	"github.com/mirantis/broker/misc"
 	"github.com/spf13/cobra"
 )
 
@@ -18,7 +18,7 @@ var nodeInspectCmd = &cobra.Command{
 	Short: "Display detailed information on one or more nodes",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			fmt.Println(`Please provide a node name. To list the nodes you can use`, "\n\tpowerplug node ls")
+			fmt.Println(`Please provide a node name. To list the nodes you can use`, "\n\tbroker node ls")
 			return
 		} else if len(args) > 0 {
 			GetInspect(args)

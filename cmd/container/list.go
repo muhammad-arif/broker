@@ -11,7 +11,7 @@ import (
 	"github.com/docker/docker/api/types/network"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/jedib0t/go-pretty/v6/text"
-	"github.com/mirantis/powerplug/misc"
+	"github.com/mirantis/broker/misc"
 	dLib "github.com/muhammad-arif/dsinfoParsingLibrary"
 	"github.com/spf13/cobra"
 	"regexp"
@@ -22,7 +22,7 @@ var verbose bool
 
 // listCmd represents the list command
 var ContListCmd = &cobra.Command{
-	Use:   "broker container ls [all|NODE NAME]",
+	Use:   "container ls [all|NODE NAME]",
 	Short: "List containers",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {

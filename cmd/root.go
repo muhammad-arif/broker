@@ -5,9 +5,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/mirantis/powerplug/cmd/container"
-	"github.com/mirantis/powerplug/cmd/logs"
-	"github.com/mirantis/powerplug/cmd/node"
+	"github.com/mirantis/broker/cmd/container"
+	"github.com/mirantis/broker/cmd/logs"
+	"github.com/mirantis/broker/cmd/node"
 	"github.com/spf13/cobra"
 	"os"
 )
@@ -15,18 +15,22 @@ import (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "broker",
-	Short: "A brief description of your application",
+	Short: "Is a CLI tool to analyze/parse the dsinfo.json file and extract meaningful information",
 	Run: func(cmd *cobra.Command, args []string) {
 		help := `
+A cli tool/parser/analyzer to analyze support bundle's dsinfo.json file and show meaningful output
+
 Usage:  broker [OPTIONS] COMMAND
 
-A parser/analyzer to analyze support bundle's dsinfo.json file and show meaningful output
-  
+Available Commands:
   node	      Shows node specific information
   container   Shows container specific information 
   logs        Shows logs of a container or a specific object of a node
   info        Shows components related information of the nodes and container  
   stats	      Shows statistics/metrics/performance related information
+
+Flags:
+  -h, --help  Help for Broker
 `
 		fmt.Println(help)
 	},
@@ -42,11 +46,13 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	//rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	rootCmd.AddCommand(container.ContainerCmd)
 	rootCmd.AddCommand(container.ContListCmd)
 	rootCmd.AddCommand(container.ContInspectCmd)
 	rootCmd.AddCommand(node.NodeCmd)
 	rootCmd.AddCommand(logs.LogsCmd)
 	rootCmd.AddCommand(container.ContListCmd)
+	rootCmd.SetHelpCommand(helpCmd)
+
 }

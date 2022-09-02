@@ -8,13 +8,13 @@ import (
 	"fmt"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/jedib0t/go-pretty/v6/text"
-	misc "github.com/mirantis/powerplug/misc"
+	misc "github.com/mirantis/broker/misc"
 	"github.com/spf13/cobra"
 )
 
 // nodeListCmd represents the list command
 var nodeListCmd = &cobra.Command{
-	Use:   "powerplug node ls",
+	Use:   "broker node ls",
 	Short: "List swarm nodes",
 	Run: func(cmd *cobra.Command, args []string) {
 		NodeList()

@@ -1,4 +1,4 @@
-module github.com/mirantis/powerplug
+module github.com/mirantis/broker
 
 go 1.17
 

@@ -9,7 +9,7 @@ This is tool has been inspired from `docker-cli` and re-used a majority of types
 To list available commands, either run `broker` with no parameters
 or execute `broker help`:
 ```console=
-A cli tool parser/analyzer to analyze support bundle's dsinfo.json file and show meaningful output
+A cli tool/parser/analyzer to analyze support bundle's dsinfo.json file and show meaningful output
 
 Usage:  broker [OPTIONS] COMMAND
 

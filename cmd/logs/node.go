@@ -7,7 +7,7 @@ package logs
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/mirantis/powerplug/misc"
+	"github.com/mirantis/broker/misc"
 	dLib "github.com/muhammad-arif/dsinfoParsingLibrary"
 	"github.com/spf13/cobra"
 )
@@ -123,7 +123,39 @@ func GetLogsDtr(d *dLib.DsinfoSlashDsinfoDotJson) {
 }
 
 func GetLogsDaemon(d *dLib.DsinfoSlashDsinfoDotJson) {
-	
+	type nestedDsinfoJournalDaemon struct {
+		//JournalctlDaemon json.RawMessage `json:"journalctl_daemon"`
+		JournalctlDaemon []byte `json:"journalctl_daemon"`
+		//JournalctlDaemon interface{} `json:"journalctl_daemon"`
+	}
+	type lines struct {
+		l []string
+	}
+	var NodeContents nestedDsinfoJournalDaemon
+	err := json.Unmarshal(d.DsinfoContents, &NodeContents)
+	if err != nil {
+		fmt.Errorf("%v", err)
+	}
+	//var x []string
+	//s, _ := strconv.Unquote(string(NodeContents.JournalctlDaemon))
+	//s := json.Unmarshal(NodeContents.JournalctlDaemon, &x)
+	//var eachline lines
+	//json.Unmarshal(NodeContents.JournalctlDaemon, eachline)
+	fmt.Println(NodeContents.JournalctlDaemon)
+
+	//fmt.Println(string(NodeContents.JournalctlDaemon))
+	//v:=[]byte{}
+	//ls := fmt.Sprintf(string(NodeContents.JournalctlDaemon))
+	//for _, v := range NodeContents.JournalctlDaemon. {
+	//	fmt.Println(v)
+	//xd := fmt.Sprintf("%s", NodeContents.JournalctlDaemon)
+	//xd := fmt.Sprint(string(NodeContents.JournalctlDaemon))
+	//fmt.Println(xd)
+	//}
+	//for _, v := range  {
+	//	fmt.Println(string(v))
+	//}
+
 }
 
 func GetLogsKernel(d *dLib.DsinfoSlashDsinfoDotJson) {
