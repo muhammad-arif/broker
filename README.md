@@ -73,7 +73,7 @@ broker
 The command `node` provides 2 subcommands `ls` and `inspect`
 #### node ls
 This command will return list of all the nodes of the cluster,
-```console
+```
 ╰──➤ broker node ls
 +------------------+---------+--------+-------+---------------+---------+---------+-------+-------+
 |       NAME       |   ROLE  |  AVAIL | STATE |       IP      |    OS   |  ENGINE |  MKE  |  ORCA |
@@ -91,7 +91,7 @@ This command will return list of all the nodes of the cluster,
 +------------------+---------+--------+-------+---------------+---------+---------+-------+-------+
 ```
 For help use help flag,
-```console
+```
 ╰──➤ broker node ls --help
 List swarm nodes
 
