@@ -6,6 +6,7 @@ package cmd
 
 import (
 	"fmt"
+	dLib "github.com/muhammad-arif/dsinfoParsingLibrary"
 
 	"github.com/spf13/cobra"
 )
@@ -37,4 +38,28 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// statsCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+func GetStatsDf(d *dLib.DsinfoSlashDsinfoDotJson) {
+
+}
+
+func GetStatsDockerStats(d *dLib.DsinfoSlashDsinfoDotJson) {
+
+}
+func GetStatsIoStat(d *dLib.DsinfoSlashDsinfoDotJson) {
+
+}
+func GetStatsLscpu(d *dLib.DsinfoSlashDsinfoDotJson) {
+
+}
+
+func GetStatsMeminfo(d *dLib.DsinfoSlashDsinfoDotJson) {
+
+}
+
+func GetStatsNetstats(d *dLib.DsinfoSlashDsinfoDotJson) {
+
+}
+func GetStatsVmstat(d *dLib.DsinfoSlashDsinfoDotJson) {
+
 }
