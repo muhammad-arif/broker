@@ -1,27 +1,49 @@
+/*
+Copyright © 2022 Matteo Andrii Marjan Prashant Oleksandr George Artur and all EMEA/APAC/AMER TSE Colleagues
+*/
+
 package misc
 
 import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/bytedance/sonic"
 	"github.com/fvbommel/sortorder"
 	dLib "github.com/muhammad-arif/dsinfoParsingLibrary"
 	"os"
 	"sort"
+	"strings"
 )
 
-//func ParseCoreDsinfo() []byte {
-//	var file = "dsinfo.json"
-//	dsinfoJson, err := os.ReadFile(file)
-//	if err != nil {
-//		fmt.Errorf("cannot Read File %s", err)
-//	}
-//	return dsinfoJson
-//}
+const shortLen = 12
+
+type ImageMetadata struct {
+	Containers   string `json:"Containers"`
+	CreatedAt    string `json:"CreatedAt"`
+	CreatedSince string `json:"CreatedSince"`
+	Digest       string `json:"Digest"`
+	ID           string `json:"ID"`
+	Repository   string `json:"Repository"`
+	SharedSize   string `json:"SharedSize"`
+	Size         string `json:"Size"`
+	Tag          string `json:"Tag"`
+	UniqueSize   string `json:"UniqueSize"`
+	VirtualSize  string `json:"VirtualSize"`
+}
+
+func TruncateID(id string) string {
+	if i := strings.IndexRune(id, ':'); i >= 0 {
+		id = id[i+1:]
+	}
+	if len(id) > shortLen {
+		id = id[:shortLen]
+	}
+	return id
+}
 
 type ParseUcpNodesInspectT struct {
 	UcpNodesTxt json.RawMessage `json:"ucp-nodes.txt"`
-	//UcpNodesTxt json.RawMessage `json:"ucp-nodes.txt"`
 }
 
 // ParseUcpNodesInspect returns
@@ -29,6 +51,8 @@ type ParseUcpNodesInspectT struct {
 // ii) node inspect structure
 // iii) corefile (sharing os.ReadFile)
 func ParseUcpNodesInspect() (map[string]string, *[]dLib.Node, *[]byte) {
+	//defer profile.Start(profile.MemProfileHeap).Stop()
+	//defer profile.Start(profile.MemProfileAllocs).Stop()
 	// reading file
 	var file = "dsinfo.json"
 	dsinfoJson, err := os.ReadFile(file)
@@ -37,7 +61,7 @@ func ParseUcpNodesInspect() (map[string]string, *[]dLib.Node, *[]byte) {
 	}
 	// Unmarshalling to mininmal type ParseUcpNodesInspectType
 	var ucpNodesInspect ParseUcpNodesInspectT
-	err = json.Unmarshal(dsinfoJson, &ucpNodesInspect)
+	err = sonic.Unmarshal(dsinfoJson, &ucpNodesInspect)
 	if err != nil {
 		fmt.Errorf("Cannot unmarshal %s", err)
 	}
@@ -61,6 +85,23 @@ func PrettyString(str string) (string, error) {
 		return "", err
 	}
 	return prettyJSON.String(), nil
+}
+
+func PrettyPrintFromByteSlice(d *json.RawMessage) {
+	x := *d
+	//removing bracket
+	x = bytes.ReplaceAll(x, []byte{91, 10}, []byte{10})
+	//removing tabs
+	x = bytes.ReplaceAll(x, []byte{9, 9, 9, 9}, []byte{})
+	//removing starting quotes
+	x = bytes.ReplaceAll(x, []byte{10, 34}, []byte{10})
+	//removing slashes (\) for escaping quotes
+	x = bytes.ReplaceAll(x, []byte{92, 34}, []byte{34})
+	//removing end quote and comma
+	x = bytes.ReplaceAll(x, []byte{34, 44, 10}, []byte{10})
+	//removing trailing tabs
+	x = bytes.ReplaceAll(x, []byte{10, 9, 9, 9, 93}, []byte{})
+	fmt.Printf("%s\n", x)
 }
 
 /*
