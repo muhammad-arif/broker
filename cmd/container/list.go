@@ -1,12 +1,12 @@
 /*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
+Copyright © 2022 Matteo Andrii Marjan Prashant Oleksandr George Artur and all EMEA/APAC/AMER TSE Colleagues
 */
 package container
 
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/network"
 	"github.com/jedib0t/go-pretty/v6/table"
@@ -40,7 +40,7 @@ func init() {
 }
 
 //minimal type for efficient unmarshaling
-type nestedDsinfoT struct {
+type NestedDsinfoT struct {
 	ContainerInfo map[string]containerInfoT `json:"container_info"`
 }
 type containerInfoT struct {
@@ -51,19 +51,26 @@ func GetContainers(a []string) {
 	nodeList, _, dsinfoJson := misc.ParseUcpNodesInspect()
 	if a[0] == "all" {
 		var nestedDsinfo = make(map[string]json.RawMessage)
-		err := json.Unmarshal(*dsinfoJson, &nestedDsinfo)
+		err := sonic.Unmarshal(*dsinfoJson, &nestedDsinfo)
 		if err != nil {
 			fmt.Errorf("cannot unmarshal %s", err)
 		}
+		//Ignoring concurrency as it seems 3s slower than the usual
+		//var wg = &sync.WaitGroup{}
 		for k, _ := range nodeList {
+			//wg.Add(1)
+			//go func() {
 			createPerNodeContainerList(k, nestedDsinfo)
+			//wg.Done()
+			//}()
 		}
+		//wg.Wait()
 	} else {
 		for _, k := range a {
 			//check arguments validity
 			if _, ok := nodeList[k]; ok {
 				var nestedDsinfo = make(map[string]json.RawMessage)
-				err := json.Unmarshal(*dsinfoJson, &nestedDsinfo)
+				err := sonic.Unmarshal(*dsinfoJson, &nestedDsinfo)
 				if err != nil {
 					fmt.Errorf("cannot unmarshal %s", err)
 				}
@@ -74,6 +81,7 @@ func GetContainers(a []string) {
 }
 func createPerNodeContainerList(k string, nestedDsinfo map[string]json.RawMessage) {
 	t := table.NewWriter()
+	//t.SetAllowedRowLength(200)
 	t.SetColumnConfigs([]table.ColumnConfig{
 		{Number: 1, AlignHeader: text.AlignCenter},
 		{Number: 2, AlignHeader: text.AlignCenter},
@@ -85,17 +93,20 @@ func createPerNodeContainerList(k string, nestedDsinfo map[string]json.RawMessag
 	})
 	t.SetTitle(k)
 	t.AppendHeader(table.Row{"Name", "Image", "Created", "Status", "OOMK", "Rst-ng", "Network"})
-
 	var nodeDsinfoStruct dLib.DsinfoSlashDsinfoDotJson
-	err := json.Unmarshal(nestedDsinfo[k], &nodeDsinfoStruct)
+	err := sonic.Unmarshal(nestedDsinfo[k], &nodeDsinfoStruct)
 	if err != nil {
 		fmt.Errorf("Cannot unmarshal nesteddsinfo")
 	}
-	var NodeContents nestedDsinfoT
-	err = json.Unmarshal(nodeDsinfoStruct.DsinfoContents, &NodeContents)
+	var NodeContents NestedDsinfoT
+	err = sonic.Unmarshal(nodeDsinfoStruct.DsinfoContents, &NodeContents)
+	if err != nil {
+		fmt.Errorf("Cannot unmarshal NodeContents")
+	}
 	for _, v := range NodeContents.ContainerInfo {
 		cName, iName, nName := dressingRoom(v.Inspect.Name, v.Inspect.Config.Image, v.Inspect.NetworkSettings.Networks)
-		t.AppendRow(table.Row{cName, iName, fmt.Sprintf("%.19s", v.Inspect.Created), v.Inspect.State.Status, v.Inspect.State.Restarting, v.Inspect.State.OOMKilled, nName})
+		t.AppendRow(table.Row{cName, iName, fmt.Sprintf("%.19s", v.Inspect.Created), v.Inspect.State.Status, v.Inspect.State.Restarting, v.Inspect.State.OOMKilled, fmt.Sprintf("%.20s", nName)})
+
 	}
 	fmt.Println(t.Render())
 

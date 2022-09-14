@@ -1,6 +1,7 @@
 /*
-Copyright belongs to all species of all the universes
+Copyright © 2022 Matteo Andrii Marjan Prashant Oleksandr George Artur and all EMEA/APAC/AMER TSE Colleagues
 */
+
 package container
 
 import (

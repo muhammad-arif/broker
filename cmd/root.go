@@ -1,5 +1,5 @@
 /*
-Copyright belongs to all species of all the universes
+Copyright © 2022 Matteo Andrii Marjan Prashant Oleksandr George Artur and all EMEA/APAC/AMER TSE Colleagues
 */
 package cmd
 
@@ -24,9 +24,9 @@ Usage:  broker [OPTIONS] COMMAND
 
 Available Commands:
   node	      Shows node specific information
-  container   Shows container specific information 
+  container   Shows container specific information
   logs        Shows logs of a container or a specific object of a node
-  info        Shows components related information of the nodes and container  
+  info        Shows components related information of the nodes and container
   stats	      Shows statistics/metrics/performance related information
 
 Flags:
@@ -52,7 +52,12 @@ func init() {
 	rootCmd.AddCommand(container.ContInspectCmd)
 	rootCmd.AddCommand(node.NodeCmd)
 	rootCmd.AddCommand(logs.LogsCmd)
-	rootCmd.AddCommand(container.ContListCmd)
 	rootCmd.SetHelpCommand(helpCmd)
+	rootCmd.AddCommand(infoCmd)
+	rootCmd.AddCommand(networkCmd)
+
+	// Flags for top level commands (root, info, network ...)
+	infoCmd.Flags().BoolVarP(&pretty, "pretty", "p", false, "pretty JSON output")
+	infoCmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
 
 }
