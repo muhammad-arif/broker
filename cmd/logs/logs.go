@@ -11,9 +11,10 @@ import (
 
 // LogsCmd represents the logs command
 var LogsCmd = &cobra.Command{
-	Use:   "logs [OPTIONS] [nodes| container] [nodeName|containerName nodeName]",
-	Short: "Fetch the logs of the containers and nodes",
-	Args:  cobra.MinimumNArgs(1),
+	Use:       "logs [node|container] [nodeName|containerName]",
+	Short:     "Fetch the logs of the containers and nodes",
+	ValidArgs: []string{"node", "container"},
+	Args:      cobra.MatchAll(cobra.MinimumNArgs(1), cobra.OnlyValidArgs),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("logs called")
 	},

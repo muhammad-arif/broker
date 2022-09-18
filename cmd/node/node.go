@@ -5,19 +5,18 @@ Copyright © 2022 Matteo Andrii Marjan Prashant Oleksandr George Artur and all E
 package node
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
 // NodeCmd represents the node command
 var NodeCmd = &cobra.Command{
-	Use:   "node [COMMAND]",
-	Short: "Collect Swarm Node information",
+	Use:       "node [COMMAND]",
+	Short:     "Collect Swarm Node information",
+	ValidArgs: []string{"ls", "inspect"},
+	Args:      cobra.MatchAll(cobra.MinimumNArgs(1), cobra.OnlyValidArgs),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("node called")
 	},
-	Aliases: []string{"nodes", "n", "no", "node"},
+	Aliases: []string{"nodes", "nd", "node", "n"},
 }
 
 func init() {

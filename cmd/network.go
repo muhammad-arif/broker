@@ -16,28 +16,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//var verbose bool
-//var ValidArgs = map[string]int{"clusterinfo": 1, "dmidecode": 2, "images": 3, "dockerinfo": 4, "pidlimits": 5, "version": 6, "filemax": 7, "ifconfig": 8, "kernel": 9, "mounts": 11, "networking": 12, "psauxdocker": 12, "rethinkstatus": 13, "running-cgroup": 14, "sestatus": 15, "kernelconf": 16, "ssd": 17, "system-cgroup": 18, "system-release": 19, "ucp-controller-diag": 20, "uptime": 21, "daemondotjson": 22}
-var validNetworkArgs = map[string]int{"ip": 0, "link": 1, "route": 2}
-var validNetworkArgSlice = []string{"ip", "link", "route"}
+var validNetworkArgs = map[string]int{"ip": 0, "link": 1, "route": 2, "iptables": 3}
+var validNetworkArgSlice = []string{"ip", "link", "route", "iptables"}
 
 // networkCmd represents the network command
 var networkCmd = &cobra.Command{
 	Use:   "network [argument] [nodeName]" + "\n\nAllowed arguments are: \n\t" + strings.Join(validNetworkArgSlice, "\n\t"),
 	Short: "Shows network information of a node",
 	Args: func(cmd *cobra.Command, args []string) error {
-		//if len(args) < 1 {
-		//	return fmt.Errorf("requires a valid argument")
-		//} else if len(args) <= 2 {
-		//	if _, ok := validArgs[args[0]]; ok {
-		//		return nil
-		//	}
-		//}
-		if len(args) == 2 {
+		if _, ok := validNetworkArgs[args[0]]; ok && len(args) == 2 {
 			return nil
 		}
 		return fmt.Errorf("requires 2 valid argument")
+
 	},
+	Aliases: []string{"net", "network", "nt"},
 	Run: func(cmd *cobra.Command, args []string) {
 		getNetwork(args)
 	},
@@ -54,6 +47,7 @@ func getNetwork(a []string) {
 	nodeList, _, dsinfoJson := misc.ParseUcpNodesInspect()
 	arg := a[0]
 	node := a[1]
+
 	if _, ok := nodeList[node]; ok {
 		var nestedDsinfo = make(map[string]json.RawMessage)
 		err := sonic.Unmarshal(*dsinfoJson, &nestedDsinfo)
@@ -83,6 +77,9 @@ func getNetwork(a []string) {
 		case "iptables":
 			GetNetIptables(&NodeContents.Networking)
 		}
+	} else {
+		fmt.Println("wrong node name. please run `broker node ls -q` and select one")
+
 	}
 }
 

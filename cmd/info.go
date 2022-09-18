@@ -19,8 +19,8 @@ import (
 var pretty bool
 var verbose bool
 
-var validInfoArgs = map[string]int{"clusterinfo": 1, "dmidecode": 2, "images": 3, "dockerinfo": 4, "pidlimits": 5, "version": 6, "filemax": 7, "ifconfig": 8, "kernel": 9, "mounts": 11, "networking": 12, "psauxdocker": 12, "rethinkstatus": 13, "running-cgroup": 14, "sestatus": 15, "kernelconf": 16, "ssd": 17, "system-cgroup": 18, "system-release": 19, "ucp-controller-diag": 20, "uptime": 21, "daemondotjson": 22}
-var validInfoArgsSlice = []string{"clusterinfo", "dmidecode", "images", "dockerinfo", "pidlimits", "version", "filemax", "ifconfig", "kernel", "mounts", "networking", "psauxdocker", "rethinkstatus", "running-cgroup", "sestatus", "kernelconf", "ssd", "system-cgroup", "system-release", "ucp-controller-diag", "uptime", "daemondotjson"}
+var validInfoArgs = map[string]int{"lscpu": 0, "clusterinfo": 1, "dmidecode": 2, "images": 3, "dockerinfo": 4, "pidlimits": 5, "version": 6, "filemax": 7, "ifconfig": 8, "kernel": 9, "mounts": 11, "networking": 12, "psauxdocker": 12, "rethinkstatus": 13, "running-cgroup": 14, "sestatus": 15, "kernelconf": 16, "ssd": 17, "system-cgroup": 18, "system-release": 19, "ucp-controller-diag": 20, "uptime": 21, "daemondotjson": 22}
+var validInfoArgsSlice = []string{"lscpu", "clusterinfo", "dmidecode", "images", "dockerinfo", "pidlimits", "version", "filemax", "ifconfig", "kernel", "mounts", "networking", "psauxdocker", "rethinkstatus", "running-cgroup", "sestatus", "kernelconf", "ssd", "system-cgroup", "system-release", "ucp-controller-diag", "uptime", "daemondotjson"}
 
 // infoCmd represents the info command
 var infoCmd = &cobra.Command{
@@ -28,14 +28,12 @@ var infoCmd = &cobra.Command{
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) < 1 {
 			return fmt.Errorf("requires a valid argument")
-		} else if len(args) <= 2 {
-			if _, ok := validInfoArgs[args[0]]; ok {
-				return nil
-			}
+		} else if _, ok := validInfoArgs[args[0]]; ok && len(args) <= 2 {
+			return nil
 		}
 		return fmt.Errorf("requires a valid argument")
 	},
-	//Long: "Allowed arguments are: " + strings.Join(ValidArgs, "\n\t "),
+	Short: "Shows information about various node specific components",
 	Run: func(cmd *cobra.Command, args []string) {
 		getInfo(args)
 	},
@@ -43,8 +41,11 @@ var infoCmd = &cobra.Command{
 }
 
 func init() {
+	infoCmd.Flags().BoolVarP(&pretty, "pretty", "p", false, "pretty JSON output")
+	infoCmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
 
 }
+
 func getInfo(a []string) {
 	nodeList, _, dsinfoJson := misc.ParseUcpNodesInspect()
 	if len(a) == 1 {
@@ -107,7 +108,8 @@ func getInfo(a []string) {
 				GetInfoUptime(&nodeDsinfoStruct.DsinfoContents)
 			case "daemondotjson":
 				GetConfDaemonDotJson(&nodeDsinfoStruct.DsinfoContents)
-
+			case "lscpu":
+				GetInfoLscpu(&nodeDsinfoStruct.DsinfoContents)
 			}
 			//wg.Done()
 			//}()
@@ -172,10 +174,25 @@ func getInfo(a []string) {
 				GetInfoUptime(&nodeDsinfoStruct.DsinfoContents)
 			case "daemondotjson":
 				GetConfDaemonDotJson(&nodeDsinfoStruct.DsinfoContents)
-
+			case "lscpu":
+				GetInfoLscpu(&nodeDsinfoStruct.DsinfoContents)
 			}
 		}
 	}
+
+}
+
+// GetInfoLscpu shows list of cpus
+func GetInfoLscpu(d *json.RawMessage) {
+	type nestedDsinfoForDf struct {
+		Lscpu json.RawMessage `json:"lscpu"`
+	}
+	var NodeContents nestedDsinfoForDf
+	err := sonic.Unmarshal(*d, &NodeContents)
+	if err != nil {
+		fmt.Errorf("Cannot unmarshal NodeContents")
+	}
+	misc.PrettyPrintFromByteSlice(&NodeContents.Lscpu)
 
 }
 

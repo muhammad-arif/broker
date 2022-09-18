@@ -15,7 +15,7 @@ var pretty bool
 
 // nodeInspectCmd represents the inspect command
 var nodeInspectCmd = &cobra.Command{
-	Use:   "node inspect [NODE-NAME]",
+	Use:   "inspect [NODE-NAME]",
 	Short: "Display detailed information on one or more nodes",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {

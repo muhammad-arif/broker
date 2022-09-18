@@ -22,7 +22,7 @@ var verbose bool
 
 // listCmd represents the list command
 var ContListCmd = &cobra.Command{
-	Use:   "container ls [all|NODE NAME]",
+	Use:   "ls [all|NODE NAME]",
 	Short: "List containers",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {

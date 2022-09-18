@@ -15,7 +15,7 @@ var quiet bool
 
 // nodeListCmd represents the list command
 var nodeListCmd = &cobra.Command{
-	Use:   "broker node ls",
+	Use:   "ls",
 	Short: "List swarm nodes",
 	Run: func(cmd *cobra.Command, args []string) {
 		NodeList()

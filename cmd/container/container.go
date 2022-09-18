@@ -11,8 +11,10 @@ import (
 
 // containerCmd represents the container command
 var ContainerCmd = &cobra.Command{
-	Use:   "container COMMAND",
-	Short: "Check containers information",
+	Use:       "container",
+	Short:     "Check containers information",
+	ValidArgs: []string{"ls", "inspect"},
+	Args:      cobra.MatchAll(cobra.MinimumNArgs(1), cobra.OnlyValidArgs),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("container called")
 	},
@@ -21,5 +23,5 @@ var ContainerCmd = &cobra.Command{
 
 func init() {
 	ContainerCmd.AddCommand(ContListCmd)
-	ContainerCmd.AddCommand(ContInspectCmd)
+	ContainerCmd.AddCommand(contInspectCmd)
 }

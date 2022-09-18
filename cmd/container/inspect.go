@@ -19,8 +19,8 @@ import (
 var pretty bool
 
 // contInspectCmd represents the inspect command
-var ContInspectCmd = &cobra.Command{
-	Use:   "container inspect [CONTAINER NAME] [NODE NAME] ",
+var contInspectCmd = &cobra.Command{
+	Use:   "inspect [CONTAINER NAME] [NODE NAME] ",
 	Short: "Display detailed information on one or more containers",
 	Args:  cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
@@ -30,7 +30,7 @@ var ContInspectCmd = &cobra.Command{
 }
 
 func init() {
-	ContInspectCmd.Flags().BoolVarP(&pretty, "pretty", "p", false, "pretty JSON output")
+	contInspectCmd.Flags().BoolVarP(&pretty, "pretty", "p", false, "pretty JSON output")
 }
 
 func getContainerInspect(a []string) {

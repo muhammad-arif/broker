@@ -4,7 +4,6 @@ Copyright © 2022 Matteo Andrii Marjan Prashant Oleksandr George Artur and all E
 package cmd
 
 import (
-	"fmt"
 	"github.com/mirantis/broker/cmd/container"
 	"github.com/mirantis/broker/cmd/logs"
 	"github.com/mirantis/broker/cmd/node"
@@ -12,27 +11,15 @@ import (
 	"os"
 )
 
+var help bool
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "broker",
-	Short: "Is a CLI tool to analyze/parse the dsinfo.json file and extract meaningful information",
+	Use:       "broker",
+	Short:     "A cli tool/parser/analyzer to analyze support bundle's dsinfo.json file and show meaningful output",
+	Args:      cobra.MatchAll(cobra.MinimumNArgs(1), cobra.OnlyValidArgs),
+	ValidArgs: []string{"container", "node", "log", "info", "stats", "network"},
 	Run: func(cmd *cobra.Command, args []string) {
-		help := `
-A cli tool/parser/analyzer to analyze support bundle's dsinfo.json file and show meaningful output
-
-Usage:  broker [OPTIONS] COMMAND
-
-Available Commands:
-  node	      Shows node specific information
-  container   Shows container specific information
-  logs        Shows logs of a container or a specific object of a node
-  info        Shows components related information of the nodes and container
-  stats	      Shows statistics/metrics/performance related information
-
-Flags:
-  -h, --help  Help for Broker
-`
-		fmt.Println(help)
 	},
 }
 
@@ -48,8 +35,6 @@ func Execute() {
 func init() {
 	//rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	rootCmd.AddCommand(container.ContainerCmd)
-	rootCmd.AddCommand(container.ContListCmd)
-	rootCmd.AddCommand(container.ContInspectCmd)
 	rootCmd.AddCommand(node.NodeCmd)
 	rootCmd.AddCommand(logs.LogsCmd)
 	rootCmd.SetHelpCommand(helpCmd)
@@ -57,7 +42,5 @@ func init() {
 	rootCmd.AddCommand(networkCmd)
 
 	// Flags for top level commands (root, info, network ...)
-	infoCmd.Flags().BoolVarP(&pretty, "pretty", "p", false, "pretty JSON output")
-	infoCmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
-
+	rootCmd.Flags().BoolVarP(&help, "help", "h", false, "help command")
 }
