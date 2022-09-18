@@ -30,7 +30,7 @@ Flags:
 -h, --help  Help for Broker
 ```
 ### Command line tree so far
-```
+```{r, attr.output='style="max-height: 2px;"'}
 broker
 ├── node
 │   ├── ls
