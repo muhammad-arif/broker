@@ -1,5 +1,6 @@
 
 # Broker CLI
+[![Go](https://github.com/muhammad-arif/broker/actions/workflows/go.yml/badge.svg?branch=main)](https://github.com/muhammad-arif/broker/actions/workflows/go.yml)
 ## About
 
 This repository is the home of the cli used to parse the `dsinfo.json` file from the support bundle generated from Mirantis Kubernetes Engine.
