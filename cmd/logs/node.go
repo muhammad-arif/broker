@@ -51,12 +51,12 @@ func getLogs(a []string) {
 		var nestedDsinfo = make(map[string]json.RawMessage)
 		err := sonic.Unmarshal(*dsinfoJson, &nestedDsinfo)
 		if err != nil {
-			fmt.Errorf("cannot unmarshal %s", err)
+			_ = fmt.Errorf("cannot unmarshal %s", err)
 		}
 		var nodeDsinfoStruct dLib.DsinfoSlashDsinfoDotJson
 		err = sonic.Unmarshal(nestedDsinfo[node], &nodeDsinfoStruct)
 		if err != nil {
-			fmt.Errorf("Cannot unmarshal nesteddsinfo")
+			_ = fmt.Errorf("Cannot unmarshal nesteddsinfo")
 		}
 		switch log {
 		case "calico":
@@ -161,7 +161,7 @@ func GetLogsDmesg(d *dLib.DsinfoSlashDsinfoDotJson) {
 	if err != nil {
 		fmt.Errorf("%v", err)
 	}
-	for i, _ := range NodeContents.Dmesg {
+	for i := range NodeContents.Dmesg {
 		i64, _ := strconv.ParseInt(NodeContents.Dmesg[i].REALTIMETIMESTAMP, 10, 32)
 		unixTimeUTC := time.Unix(i64, 0) //gives unix time stamp in utc
 		fmt.Println(unixTimeUTC.Format(time.RFC3339), " ", NodeContents.Dmesg[i].PRIORITY, " ", NodeContents.Dmesg[i].TRANSPORT, "  ", NodeContents.Dmesg[i].HOSTNAME, "  ", NodeContents.Dmesg[i].MESSAGE)
@@ -214,7 +214,7 @@ func GetLogsKernel(d *dLib.DsinfoSlashDsinfoDotJson) {
 	if err != nil {
 		fmt.Errorf("%v", err)
 	}
-	for i, _ := range NodeContents.JournalctlKernelDmesg {
+	for i := range NodeContents.JournalctlKernelDmesg {
 		i64, _ := strconv.ParseInt(NodeContents.JournalctlKernelDmesg[i].REALTIMETIMESTAMP, 10, 32)
 		unixTimeUTC := time.Unix(i64, 0) //gives unix time stamp in utc
 		fmt.Println(unixTimeUTC.Format(time.RFC3339), " ", NodeContents.JournalctlKernelDmesg[i].PRIORITY, " ", NodeContents.JournalctlKernelDmesg[i].TRANSPORT, "  ", NodeContents.JournalctlKernelDmesg[i].HOSTNAME, "  ", NodeContents.JournalctlKernelDmesg[i].MESSAGE)
@@ -231,8 +231,8 @@ func GetLogsShimLogs(d *dLib.DsinfoSlashDsinfoDotJson) {
 	if err != nil {
 		fmt.Errorf("%v", err)
 	}
-	for k, _ := range NodeContents.ShimLogs {
-		fmt.Println("\n-----------------------------------------------------\n", k, "\n-----------------------------------------------------\n")
+	for k := range NodeContents.ShimLogs {
+		fmt.Printf("\n-----------------------------------------------------\n %v \n-----------------------------------------------------\n", k)
 		x := NodeContents.ShimLogs[k]
 		//removing bracket
 		x = bytes.ReplaceAll(x, []byte{91, 10}, []byte{10})
